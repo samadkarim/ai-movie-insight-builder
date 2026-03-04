@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { fetchMovie } from "../Lib/fetchMovie";
+import { fetchMovie } from "../lib/fetchMovie";
 import MovieCard from "../components/MovieCard";
 import CastList from "../components/CastList";
 import SentimentChart from "../components/SentimentChart";
-import { analyzeSentiment } from "../Lib/sentiment";
+import { analyzeSentiment } from "../lib/sentiment";
 
 export default function Home() {
 

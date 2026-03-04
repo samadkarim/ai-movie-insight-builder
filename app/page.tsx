@@ -1,5 +1,4 @@
 "use client";
-
 import { analyzeSentiment } from "../lib/sentiment";
 import { useState } from "react";
 import { fetchMovie } from "../lib/fetchMovie";
