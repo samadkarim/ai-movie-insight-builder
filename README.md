@@ -4,6 +4,11 @@ AI Movie Insight Builder is a web application that allows users to search movies
 
 This project demonstrates API integration, data visualization, and modern UI development using Next.js.
 
+
+## Live Demo
+
+https://ai-movie-insight-builder-idc3.vercel.app
+
 ---
 
 ## 🚀 Features
@@ -49,8 +54,17 @@ Clone the repository:
 git clone https://github.com/yourusername/ai-movie-insight-builder.git
 
 
+Navigate to the project directory:
+cd ai-movie-insight-builder
 
+Install dependencies:
+npm install
 
+Run the development server:
+npm run dev
+
+Open in your browser:
+http://localhost:3000
 
 ## 🔑 API Setup
 
@@ -80,8 +94,33 @@ tt1375666 → Inception
 tt0816692 → Interstellar  
 tt0468569 → The Dark Knight  
 
+
+
+
+#Project Structure
+
+ai-movie-insight-builder
+│
+├── app
+│   ├── layout.tsx
+│   └── page.tsx
+│
+├── lib
+│   ├── fetchMovie.js
+│   └── sentiment.js
+│
+├── public
+├── package.json
+└── README.md
+
+
 ## 👨‍💻 Author
 
 **Samad Karim**
 
-- GitHub: https://github.com/samadkarim/ai-movie-insight-builder
+ GitHub: 
+ https://github.com/samadkarim
+
+ Project Repository:
+ https://github.com/samadkarim/ai-movie-insight-builder
+
