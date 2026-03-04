@@ -28,7 +28,18 @@ This project demonstrates API integration, data visualization, and modern UI dev
 - Chart.js
 - OMDb API
 
----
+## 🔗 API Used
+
+This project uses the **OMDb API** to fetch movie information such as:
+
+- Movie title
+- Poster
+- IMDb rating
+- Plot summary
+- Cast information
+
+API Website:
+https://www.omdbapi.com/
 
 ## 📦 Installation
 
@@ -36,3 +47,41 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/yourusername/ai-movie-insight-builder.git
+
+
+
+
+
+## 🔑 API Setup
+
+This project uses the **OMDb API** to fetch movie information.
+
+Follow these steps to use the API:
+
+1. Go to the OMDb website and request a free API key:  
+https://www.omdbapi.com/apikey.aspx
+
+2. After getting the API key, open the file:
+
+lib/fetchMovie.js
+
+3. Replace the API key in the following line:
+
+```javascript
+const API_KEY = "YOUR_API_KEY";
+
+
+## 🎯 Example IMDb IDs
+
+You can test the application using these IMDb IDs:
+
+tt0133093 → The Matrix  
+tt1375666 → Inception  
+tt0816692 → Interstellar  
+tt0468569 → The Dark Knight  
+
+## 👨‍💻 Author
+
+**Samad Karim**
+
+- GitHub: https://github.com/samadkarim/ai-movie-insight-builder

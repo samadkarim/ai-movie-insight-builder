@@ -1,4 +1,5 @@
 "use client";
+
 import { analyzeSentiment } from "../lib/sentiment";
 import { useState } from "react";
 import { fetchMovie } from "../lib/fetchMovie";
@@ -10,67 +11,67 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 export default function Home() {
 
   const [movieId, setMovieId] = useState("");
-  const [movie, setMovie] = useState<any | null>(null);
+  const [movie, setMovie] = useState<any>(null);
   const [sentiment, setSentiment] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
-const searchMovie = async () => {
+  const searchMovie = async () => {
 
-  
-
-  if (!movieId) {
-    alert("Please enter IMDb ID");
-    return;
-  }
-
-  setLoading(true);   // ADD THIS
-
-  const data = await fetchMovie(movieId);
-  setMovie(data);
- 
-
-  const reviews = [
-    "Great movie with amazing action scenes",
-    "Excellent acting and story",
-    "The movie was good but slightly confusing",
-    "Amazing visuals and great soundtrack",
-    "Some parts were boring"
-  ];
-
-  const result = analyzeSentiment(reviews);
-  setSentiment(result);
-
-  setLoading(false);  // ADD THIS
-};
- const chartData = sentiment
-  ? {
-      labels: ["Positive", "Negative"],
-      datasets: [
-        {
-          label: "Audience Sentiment",
-          data: [sentiment.positive, sentiment.negative],
-          backgroundColor: ["#22c55e", "#ef4444"],
-          borderWidth: 1,
-        },
-      ],
+    if (!movieId) {
+      alert("Please enter IMDb ID");
+      return;
     }
-  : null;
- const ratingColor =
-  movie?.imdbRating >= 8
-    ? "text-green-400"
-    : movie?.imdbRating >= 6
-    ? "text-yellow-400"
-    : "text-red-400";
-  return (
-    
 
+    setLoading(true);
+
+    const data = await fetchMovie(movieId);
+    setMovie(data);
+
+    const reviews = [
+      "Great movie with amazing action scenes",
+      "Excellent acting and story",
+      "The movie was good but slightly confusing",
+      "Amazing visuals and great soundtrack",
+      "Some parts were boring"
+    ];
+
+    const result = analyzeSentiment(reviews);
+    setSentiment(result);
+
+    setLoading(false);
+  };
+
+  const chartData = sentiment
+    ? {
+        labels: ["Positive", "Negative"],
+        datasets: [
+          {
+            label: "Audience Sentiment",
+            data: [sentiment.positive, sentiment.negative],
+            backgroundColor: ["#22c55e", "#ef4444"],
+            borderWidth: 1,
+          },
+        ],
+      }
+    : null;
+
+  const ratingColor =
+    movie?.imdbRating >= 8
+      ? "text-green-400"
+      : movie?.imdbRating >= 6
+      ? "text-yellow-400"
+      : "text-red-400";
+
+  return (
     <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center pt-20">
+
       <h1 className="text-5xl font-bold mb-2">
-      AI Movie Insight Builder
-     </h1>
-     <p className="text-gray-400 mb-10 font-bold text-lg">
-            Discover movie insights powered by AI
-     </p>
+        AI Movie Insight Builder
+      </h1>
+
+      <p className="text-gray-400 mb-10 font-bold text-lg">
+        Discover movie insights powered by AI
+      </p>
 
       <div className="flex gap-3">
 
@@ -85,149 +86,144 @@ const searchMovie = async () => {
         <button
           onClick={searchMovie}
           className="bg-blue-500 px-6 py-3 rounded-lg hover:bg-blue-600 cursor-pointer"
-          
         >
           Search
         </button>
-        {loading && (
-       <p className="mt-4 text-gray-300">Loading movie...</p>
-        )}
 
       </div>
+
+      {loading && (
+        <p className="mt-4 text-gray-300">Loading movie...</p>
+      )}
+
+      {/* Quick Buttons */}
+
       <div className="flex gap-3 mt-4">
 
-<button
-onClick={() => setMovieId("tt0133093")}
-className="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600"
->
-The Matrix
-</button>
+        <button
+          onClick={() => setMovieId("tt0133093")}
+          className="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600"
+        >
+          The Matrix
+        </button>
 
-<button
-onClick={() => setMovieId("tt1375666")}
-className="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600"
->
-Inception
-</button>
+        <button
+          onClick={() => setMovieId("tt1375666")}
+          className="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600"
+        >
+          Inception
+        </button>
 
-<button
-onClick={() => setMovieId("tt0816692")}
-className="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600"
->
-Interstellar
-</button>
+        <button
+          onClick={() => setMovieId("tt0816692")}
+          className="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600"
+        >
+          Interstellar
+        </button>
 
-</div>
+      </div>
+
       {/* Movie Card */}
-     {movie && movie.Response !== "False" && (
 
-<div className="mt-10 bg-gray-900 p-6 rounded-xl max-w-5xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-10">
+      {movie && movie.Response !== "False" && (
 
-  {/* LEFT SIDE */}
+        <div className="mt-10 bg-gray-900 p-6 rounded-xl max-w-5xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-10">
 
-  <div className="text-center">
+          {/* LEFT SIDE */}
 
-    <img
-      src={movie.Poster}
-      alt={movie.Title}
-      className="rounded-lg mb-4 w-64 mx-auto hover:scale-105 transition"
-    />
+          <div className="text-center">
 
-    <h2 className="text-2xl font-bold mb-3">
-      {movie.Title}
-    </h2>
+            <img
+              src={movie.Poster}
+              alt={movie.Title}
+              className="rounded-lg mb-4 w-64 mx-auto hover:scale-105 transition"
+            />
 
-    <p>
-      <strong>Year:</strong> {movie.Year}
-    </p>
+            <h2 className="text-2xl font-bold mb-3">
+              {movie.Title}
+            </h2>
 
-    <p className={`mb-3 ${ratingColor}`}>
-      <strong>Rating:</strong> {movie.imdbRating}
-    </p>
+            <p>
+              <strong>Year:</strong> {movie.Year}
+            </p>
 
-    <p className="text-gray-300 max-w-md mx-auto leading-relaxed">
-      {movie.Plot}
-    </p>
+            <p className={`mb-3 ${ratingColor}`}>
+              <strong>Rating:</strong> {movie.imdbRating}
+            </p>
 
-  </div>
+            <p className="text-gray-300 max-w-md mx-auto leading-relaxed">
+              {movie.Plot}
+            </p>
 
+          </div>
 
-  {/* RIGHT SIDE */}
+          {/* RIGHT SIDE */}
 
-  <div>
+          <div>
 
-    {sentiment && (
+            {sentiment && (
 
-      <div className="mb-6">
+              <div className="mb-6">
 
-        <h3 className="text-xl font-semibold mb-2">
-          Audience Sentiment
-        </h3>
+                <h3 className="text-xl font-semibold mb-2">
+                  Audience Sentiment
+                </h3>
 
-        <p className="text-green-400">
-          Overall Sentiment: {sentiment.sentiment}
-        </p>
+                <p className="text-green-400">
+                  Overall Sentiment: {sentiment.sentiment}
+                </p>
 
-        <p>Positive Reviews: {sentiment.positive}</p>
+                <p>Positive Reviews: {sentiment.positive}</p>
 
-        <div className="w-full bg-gray-700 rounded mb-2">
-          <div className="bg-green-500 p-1 rounded" style={{ width: "75%" }}></div>
+                <p>Negative Reviews: {sentiment.negative}</p>
+
+                <p className="text-gray-400 mt-2">
+                  AI Summary: Most viewers praise the movie for its storytelling,
+                  visuals, and performances.
+                </p>
+
+              </div>
+
+            )}
+
+            {chartData && (
+
+              <div className="mb-6">
+
+                <h3 className="text-xl font-bold mb-4 text-blue-400">
+                  Sentiment Chart
+                </h3>
+
+                <div className="w-64 mx-auto">
+                  <Pie data={chartData} />
+                </div>
+
+              </div>
+
+            )}
+
+            <div className="text-center">
+
+              <h3 className="text-xl font-semibold mb-3 text-rose-300">
+                Movie Trailer
+              </h3>
+
+              <a
+                href={`https://www.youtube.com/results?search_query=${movie.Title}+official+trailer`}
+                target="_blank"
+                className="bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700 transition"
+              >
+                Watch Trailer
+              </a>
+
+            </div>
+
+          </div>
+
         </div>
 
-        <p>Negative Reviews: {sentiment.negative}</p>
-
-        <div className="w-full bg-gray-700 rounded">
-          <div className="bg-red-500 p-1 rounded" style={{ width: "25%" }}></div>
-        </div>
-
-        <p className="text-gray-400 mt-2">
-          AI Summary: Most viewers praise the movie for its storytelling,
-          visuals, and performances.
-        </p>
-
-      </div>
-
-    )}
-
-
-    {chartData && (
-
-      <div className="mb-6">
-
-        <h3 className="text-xl font-bold mb-4 text-blue-400">
-          Sentiment Chart
-        </h3>
-
-        <div className="w-64 mx-auto">
-          <Pie data={chartData} />
-        </div>
-
-      </div>
-
-    )}
-
-
-    <div className="text-center">
-
-      <h3 className="text-xl font-semibold mb-3 text-rose-300">
-        Movie Trailer
-      </h3>
-
-      <a
-        href={`https://www.youtube.com/results?search_query=${movie.Title}+official+trailer`}
-        target="_blank"
-        className="bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700 transition"
-      >
-        Watch Trailer
-      </a>
+      )}
 
     </div>
-
-  </div>
-
-</div>
-
-)}
-</div>
-);
+  );
 }
