@@ -1,65 +1,233 @@
-import Image from "next/image";
+"use client";
+import { analyzeSentiment } from "../lib/sentiment";
+import { useState } from "react";
+import { fetchMovie } from "../lib/fetchMovie";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Home() {
+
+  const [movieId, setMovieId] = useState("");
+  const [movie, setMovie] = useState<any | null>(null);
+  const [sentiment, setSentiment] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+
+const searchMovie = async () => {
+
+  
+
+  if (!movieId) {
+    alert("Please enter IMDb ID");
+    return;
+  }
+
+  setLoading(true);   // ADD THIS
+
+  const data = await fetchMovie(movieId);
+  setMovie(data);
+ 
+
+  const reviews = [
+    "Great movie with amazing action scenes",
+    "Excellent acting and story",
+    "The movie was good but slightly confusing",
+    "Amazing visuals and great soundtrack",
+    "Some parts were boring"
+  ];
+
+  const result = analyzeSentiment(reviews);
+  setSentiment(result);
+
+  setLoading(false);  // ADD THIS
+};
+ const chartData = sentiment
+  ? {
+      labels: ["Positive", "Negative"],
+      datasets: [
+        {
+          label: "Audience Sentiment",
+          data: [sentiment.positive, sentiment.negative],
+          backgroundColor: ["#22c55e", "#ef4444"],
+          borderWidth: 1,
+        },
+      ],
+    }
+  : null;
+ const ratingColor =
+  movie?.imdbRating >= 8
+    ? "text-green-400"
+    : movie?.imdbRating >= 6
+    ? "text-yellow-400"
+    : "text-red-400";
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    
+
+    <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center pt-20">
+      <h1 className="text-5xl font-bold mb-2">
+      AI Movie Insight Builder
+     </h1>
+     <p className="text-gray-400 mb-10 font-bold text-lg">
+            Discover movie insights powered by AI
+     </p>
+
+      <div className="flex gap-3">
+
+        <input
+          type="text"
+          placeholder="Enter IMDb ID (tt0133093)"
+          value={movieId}
+          onChange={(e) => setMovieId(e.target.value)}
+          className="p-3 rounded-lg bg-gray-500 text-white placeholder-gray-400 w-72 border border-gray-600"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+
+        <button
+          onClick={searchMovie}
+          className="bg-blue-500 px-6 py-3 rounded-lg hover:bg-blue-600 cursor-pointer"
+          
+        >
+          Search
+        </button>
+        {loading && (
+       <p className="mt-4 text-gray-300">Loading movie...</p>
+        )}
+
+      </div>
+      <div className="flex gap-3 mt-4">
+
+<button
+onClick={() => setMovieId("tt0133093")}
+className="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600"
+>
+The Matrix
+</button>
+
+<button
+onClick={() => setMovieId("tt1375666")}
+className="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600"
+>
+Inception
+</button>
+
+<button
+onClick={() => setMovieId("tt0816692")}
+className="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600"
+>
+Interstellar
+</button>
+
+</div>
+      {/* Movie Card */}
+     {movie && movie.Response !== "False" && (
+
+<div className="mt-10 bg-gray-900 p-6 rounded-xl max-w-5xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-10">
+
+  {/* LEFT SIDE */}
+
+  <div className="text-center">
+
+    <img
+      src={movie.Poster}
+      alt={movie.Title}
+      className="rounded-lg mb-4 w-64 mx-auto hover:scale-105 transition"
+    />
+
+    <h2 className="text-2xl font-bold mb-3">
+      {movie.Title}
+    </h2>
+
+    <p>
+      <strong>Year:</strong> {movie.Year}
+    </p>
+
+    <p className={`mb-3 ${ratingColor}`}>
+      <strong>Rating:</strong> {movie.imdbRating}
+    </p>
+
+    <p className="text-gray-300 max-w-md mx-auto leading-relaxed">
+      {movie.Plot}
+    </p>
+
+  </div>
+
+
+  {/* RIGHT SIDE */}
+
+  <div>
+
+    {sentiment && (
+
+      <div className="mb-6">
+
+        <h3 className="text-xl font-semibold mb-2">
+          Audience Sentiment
+        </h3>
+
+        <p className="text-green-400">
+          Overall Sentiment: {sentiment.sentiment}
+        </p>
+
+        <p>Positive Reviews: {sentiment.positive}</p>
+
+        <div className="w-full bg-gray-700 rounded mb-2">
+          <div className="bg-green-500 p-1 rounded" style={{ width: "75%" }}></div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <p>Negative Reviews: {sentiment.negative}</p>
+
+        <div className="w-full bg-gray-700 rounded">
+          <div className="bg-red-500 p-1 rounded" style={{ width: "25%" }}></div>
         </div>
-      </main>
+
+        <p className="text-gray-400 mt-2">
+          AI Summary: Most viewers praise the movie for its storytelling,
+          visuals, and performances.
+        </p>
+
+      </div>
+
+    )}
+
+
+    {chartData && (
+
+      <div className="mb-6">
+
+        <h3 className="text-xl font-bold mb-4 text-blue-400">
+          Sentiment Chart
+        </h3>
+
+        <div className="w-64 mx-auto">
+          <Pie data={chartData} />
+        </div>
+
+      </div>
+
+    )}
+
+
+    <div className="text-center">
+
+      <h3 className="text-xl font-semibold mb-3 text-rose-300">
+        Movie Trailer
+      </h3>
+
+      <a
+        href={`https://www.youtube.com/results?search_query=${movie.Title}+official+trailer`}
+        target="_blank"
+        className="bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700 transition"
+      >
+        Watch Trailer
+      </a>
+
     </div>
-  );
+
+  </div>
+
+</div>
+
+)}
+</div>
+);
 }
