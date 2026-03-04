@@ -1,6 +1,6 @@
 "use client";
 import { analyzeSentiment } from "../lib/sentiment.js";
-import { useState } from "react";A
+import { useState } from "react";
 import { fetchMovie } from "../lib/fetchMovie.js";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
